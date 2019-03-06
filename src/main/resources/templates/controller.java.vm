@@ -1,0 +1,88 @@
+package $!{package.Controller};
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+import $!{package.Entity}.$!{entity};
+import $!{package.Service}.I$!{entity}Service;
+#if($!{superControllerClassPackage})
+import $!{superControllerClassPackage};
+#end
+
+/**
+ * <p>
+ * $!{table.comment} 前端控制器
+ * </p>
+ *
+ * @author $!{author}
+ * @since $!{date}
+ */
+@RestController
+@RequestMapping("/$!{table.entityPath}")
+##public class $!{table.controllerName} extends $!{superControllerClass} {
+public class $!{table.controllerName} {
+    @Autowired private I$!{entity}Service $!{table.entityPath}Service;
+
+    /**
+    * 通过ID查询
+    *
+    * @param id ID
+    * @return $!{entity}
+    */
+    @GetMapping("/{id}")
+    public R<$!{entity}> get(@PathVariable Integer id) {
+        return new R<>($!{table.entityPath}Service.selectById(id));
+    }
+
+
+    /**
+    * 分页查询信息
+    *
+    * @param params 分页对象
+    * @return 分页对象
+    */
+    @RequestMapping("/page")
+    public Page page(@RequestParam Map<String, Object> params) {
+        params.put(CommonConstant.UHOUSE_DEL_FLAG, CommonConstant.STATUS_NOR);
+        return $!{table.entityPath}Service.selectPage(new Query<>(params), new EntityWrapper<>());
+    }
+
+    /**
+     * 添加
+     * @param  $!{table.entityPath}  实体
+     * @return success/false
+     */
+    @PostMapping
+    @PreAuthorize("@pms.hasPermission('$!{table.name}_add')")
+    public R<Boolean> add(@RequestBody $!{entity} $!{table.entityPath}) {
+        $!{table.entityPath}.setGmtCreate(new Date());
+        $!{table.entityPath}.setGmtModified(new Date());
+        return new R<>($!{table.entityPath}Service.insert($!{table.entityPath}));
+    }
+
+    /**
+     * 删除
+     * @param id ID
+     * @return success/false
+     */
+    @DeleteMapping("/{id}")
+    @PreAuthorize("@pms.hasPermission('$!{table.name}_del')")
+    public R<Boolean> delete(@PathVariable Long id) {
+        $!{entity} $!{table.entityPath} = new $!{entity}();
+        $!{table.entityPath}.setUuid(id);
+        $!{table.entityPath}.setGmtModified(new Date());
+        $!{table.entityPath}.setDeleted(CommonConstant.STATUS_DELETE);
+        return new R<>($!{table.entityPath}Service.updateById($!{table.entityPath}));
+    }
+
+    /**
+     * 编辑
+     * @param  $!{table.entityPath}  实体
+     * @return success/false
+     */
+    @PutMapping
+    @PreAuthorize("@pms.hasPermission('$!{table.name}_upd')")
+    public R<Boolean> edit(@RequestBody $!{entity} $!{table.entityPath}) {
+        $!{table.entityPath}.setGmtModified(new Date());
+        return new R<>($!{table.entityPath}Service.updateById($!{table.entityPath}));
+    }
+}
