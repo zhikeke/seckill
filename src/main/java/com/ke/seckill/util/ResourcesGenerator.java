@@ -47,7 +47,7 @@ public class ResourcesGenerator {
         // 数据源配置
         DataSourceConfig dsc = new DataSourceConfig();
         dsc.setDbType(DbType.MYSQL);
-        dsc.setDriverName("com.mysql.jdbc.Driver");
+        dsc.setDriverName("com.mysql.cj.jdbc.Driver");
         dsc.setUsername("root");
 		dsc.setPassword("123456");
 		dsc.setUrl("jdbc:mysql://localhost:3306/seckill?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false");
@@ -55,8 +55,6 @@ public class ResourcesGenerator {
 
         // 策略配置
         StrategyConfig strategy = new StrategyConfig();
-        // strategy.setCapitalMode(true);// 全局大写命名 ORACLE 注意
-//        strategy.setSuperControllerClass("com.github.pig.common.web.BaseController");
         // 表名生成策略
         strategy.setNaming(NamingStrategy.underline_to_camel);
         mpg.setStrategy(strategy);

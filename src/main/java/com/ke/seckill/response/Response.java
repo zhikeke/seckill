@@ -15,31 +15,32 @@ public class Response<T> {
     }
 
     /**
-     * 请求成功
-     * @return
-     */
-    public Response success() {
-        this.code = 0;
-        this.msg = "success";
-        return this;
+     *  成功时候的调用
+     * */
+    public static  <T> Response<T> success(T data){
+        return new Response<T>(data);
     }
 
     /**
-     * 带返回数据的请求成功
-     * @param data 返回数据
-     * @return
-     */
-    public Response success(T data) {
-        this.code = 0;
-        this.msg = "success";
+     *  失败时候的调用
+     * */
+    public static  <T> Response<T> error(ResponseMessage message){
+        return new Response<>(message);
+    }
+
+    private Response(T data) {
         this.data = data;
-        return this;
     }
 
-    public Response error(Message message) {
-        this.code = message.getCode();
-        this.msg = message.getMsg();
-        return this;
+    private Response(int code, String msg) {
+        this.code = code;
+        this.msg = msg;
     }
 
+    private Response(ResponseMessage message) {
+        if(message != null) {
+            this.code = message.getCode();
+            this.msg = message.getMsg();
+        }
+    }
 }
