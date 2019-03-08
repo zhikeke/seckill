@@ -1,5 +1,6 @@
 package com.ke.seckill.vo;
 
+import com.ke.seckill.validator.Mobile;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
@@ -11,10 +12,11 @@ import java.io.Serializable;
 @Data
 public class LoginVo implements Serializable{
     /**
-     * 用户名
+     * 手机号
      */
-    @NotBlank(message = "用户名不能为空")
-    private String nickname;
+    @Mobile
+    @NotBlank(message = "手机号不能为空")
+    private String mobile;
 
     /**
      * 密码

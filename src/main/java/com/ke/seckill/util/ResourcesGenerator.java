@@ -50,7 +50,7 @@ public class ResourcesGenerator {
         dsc.setDriverName("com.mysql.cj.jdbc.Driver");
         dsc.setUsername("root");
 		dsc.setPassword("123456");
-		dsc.setUrl("jdbc:mysql://localhost:3306/seckill?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false");
+		dsc.setUrl("jdbc:mysql://localhost:3306/seckill?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&serverTimezone=GMT%2B8");
         mpg.setDataSource(dsc);
 
         // 策略配置

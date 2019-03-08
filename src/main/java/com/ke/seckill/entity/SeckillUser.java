@@ -27,9 +27,9 @@ public class SeckillUser extends Model<SeckillUser> {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
     /**
-     * 用户名
+     * 手机号
      */
-    private String nickname;
+    private String mobile;
     /**
      * MD5(MD5(pass明文+固定salt) + 随机salt)
      */
@@ -55,6 +55,12 @@ public class SeckillUser extends Model<SeckillUser> {
      */
     @TableField("login_count")
     private Integer loginCount;
+
+    /**
+     * 是否删除 0：未删除 1:已删除
+     */
+    @TableField("deleted")
+    private Integer deleted;
 
     @Override
     protected Serializable pkVal() {

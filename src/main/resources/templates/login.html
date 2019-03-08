@@ -1,110 +1,100 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
-    <title>登录</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<title>用户登录</title>
+
     <!-- jquery -->
     <script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
     <!-- bootstrap -->
     <link rel="stylesheet" type="text/css" th:href="@{/bootstrap/css/bootstrap.min.css}" />
     <script type="text/javascript" th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
-    <!-- jquery-validator -->
-    <script type="text/javascript" th:src="@{/jquery-validation/jquery.validate.min.js}"></script>
-    <script type="text/javascript" th:src="@{/jquery-validation/localization/messages_zh.min.js}"></script>
-    <!-- layer -->
-    <script type="text/javascript" th:src="@{/layer/layer.js}"></script>
-    <!-- md5.js -->
-    <script type="text/javascript" th:src="@{/js/md5.min.js}"></script>
-    <!-- common.js -->
-    <script type="text/javascript" th:src="@{/js/common.js}"></script>
+	<!--<link rel="stylesheet" type="text/css" th:href="@{/login/vendor/bootstrap/css/bootstrap.min.css}">-->
+	<link rel="stylesheet" type="text/css" th:href="@{/login/fonts/font-awesome-4.7.0/css/font-awesome.min.css}">
+	<link rel="stylesheet" type="text/css" th:href="@{/login/fonts/iconic/css/material-design-iconic-font.min.css}">
+	<link rel="stylesheet" type="text/css" th:href="@{/login/css/util.css}">
+	<link rel="stylesheet" type="text/css" th:href="@{/login/css/main.css}">
 
-	<style type="text/css">
-		html,body{
-			height:100%;
-			width:100%;
-		}
-		body{
-			background:url('/img/bg.jpg') no-repeat;
-			background-size:100% 100%;
-			padding-top:100px;
-		}
-	</style>
+</head>
 
-    </head>
 <body>
 
-<form name="loginForm" id="loginForm" method="post"  style="width:30%; margin:0 auto;">
+	<div class="limiter">
+		<div class="container-login100" style="background-image: url('/img/bg-01.jpg');">
+			<div class="wrap-login100 p-l-55 p-r-55 p-t-65 p-b-54">
+				<form class="login100-form validate-form" name="loginForm" id="loginForm" method="post" onsubmit="return false;">
+					<span class="login100-form-title p-b-49">登录</span>
 
-	<h2 style="text-align:center; margin-bottom: 20px">用户登录</h2>
-	
-	<div class="form-group">
-       	<div class="row">
-	       	<label class="form-label col-md-4">用户名</label>
-	        <div class="col-md-8">
-	        	<input id="nickname" name = "nickname" class="form-control" type="text" placeholder="请输入用户名" required="true"  />
-	    	</div>
-	    	<div class="col-md-1">
-	    	</div>
-    	</div>
-    </div>
-    
-    <div class="form-group">
-     		<div class="row">
-		        <label class="form-label col-md-4">密码</label>
-		        <div class="col-md-8">
-		        	<input id="password" name="password" class="form-control" type="password"  placeholder="请输入密码" required="true" minlength="6" maxlength="16" />
-	       		</div>
-      		</div>
+					<div class="wrap-input100 validate-input m-b-23" data-validate="请输入手机号">
+						<span class="label-input100">手机号</span>
+						<input class="input100" type="text" name="mobile" id="mobile" placeholder="请输入手机号" autocomplete="off">
+						<span class="focus-input100" data-symbol="&#xf206;"></span>
+					</div>
+
+					<div class="wrap-input100 validate-input" data-validate="请输入密码">
+						<span class="label-input100">密码</span>
+						<input class="input100" type="password" name="password" id="password" placeholder="请输入密码">
+						<span class="focus-input100" data-symbol="&#xf190;"></span>
+					</div>
+
+					<div class="text-right p-t-8 p-b-31">
+
+					</div>
+
+					<div class="container-login100-form-btn">
+						<div class="wrap-login100-form-btn">
+							<div class="login100-form-bgbtn"></div>
+							<button class="login100-form-btn" type="submit">登 录</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
 	</div>
-	
-	<div class="row" style="margin-top:40px;">
-		     	<div class="col-md-6">
-	       	 		<button class="btn btn-primary btn-block" type="reset" onclick="reset()">重置</button>
-	       	 	</div>
-	       	 	<div class="col-md-6">
-	       	 		<button class="btn btn-primary btn-block" type="submit" onclick="login()">登录</button>
-	       	 	</div>
-	 </div>
-	 
-</form>
 </body>
+<script type="text/javascript" th:src="@{/login/vendor/jquery/jquery-3.2.1.min.js}"></script>
+<script type="text/javascript" th:src="@{/login/js/main.js}"></script>
+<!-- layer -->
+<script type="text/javascript" th:src="@{/layer/layer.js}"></script>
+<!-- common.js -->
+<script type="text/javascript" th:src="@{/js/common.js}"></script>
+<!-- md5.js -->
+<script type="text/javascript" th:src="@{/js/md5.min.js}"></script>
+
 <script>
-function login(){
-	$("#loginForm").validate({
-        submitHandler:function(form){
-             doLogin();
-        }    
+    $('#loginForm').submit(function () {
+        var inputPass = $("#password").val();
+        var salt = g_passsword_salt;
+        var str = "" + salt.charAt(0) + salt.charAt(2) + inputPass + salt.charAt(5) + salt.charAt(4);
+        var password = md5(str);
+
+        $.ajax({
+            url: "/login/do_login",
+            type: "POST",
+            data:{
+                mobile:$("#mobile").val(),
+                password: password
+            },
+            success:function(data){
+                if(data.code == 0){
+                    layer.msg("登录成功");
+                    window.location.href="/goods/to_list";
+                }else{
+                    layer.msg(data.msg);
+                }
+            },
+            error:function(){
+
+            }
+        });
     });
-}
-function doLogin(){
-	g_showLoading();
-	
-	var inputPass = $("#password").val();
-	var salt = g_passsword_salt;
-	var str = "" + salt.charAt(0) + salt.charAt(2) + inputPass + salt.charAt(5) + salt.charAt(4);
-	var password = md5(str);
-	
-	$.ajax({
-		url: "/login/do_login",
-	    type: "POST",
-	    data:{
-	    	nickname:$("#nickname").val(),
-	    	password: password
-	    },
-	    success:function(data){
-	    	layer.closeAll();
-	    	if(data.code == 0){
-	    		layer.msg("成功");
-	    		window.location.href="/goods/to_list";
-	    	}else{
-	    		layer.msg(data.msg);
-	    	}
-	    },
-	    error:function(){
-	    	layer.closeAll();
-	    }
-	});
-}
+
+    function doLogin(){
+
+    }
 </script>
+
 </html>

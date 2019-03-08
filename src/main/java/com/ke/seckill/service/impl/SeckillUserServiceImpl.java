@@ -47,7 +47,7 @@ public class SeckillUserServiceImpl extends ServiceImpl<SeckillUserMapper, Secki
             throw new GlobalException(ResponseMessage.SERVER_ERROR);
         }
 
-        SeckillUser user = userMapper.selectByNickName(loginVo.getNickname());
+        SeckillUser user = userMapper.selectByMobile(loginVo.getMobile());
 
         if (null == user) {
             throw new GlobalException(ResponseMessage.NICKNAME_NOT_EXIST);
@@ -62,7 +62,8 @@ public class SeckillUserServiceImpl extends ServiceImpl<SeckillUserMapper, Secki
         // TODO: kafka 保存用户登录信息
 
         // 生成cookie
-        addCookie(response, user);
+        String token = RandomUtil.getRandomString(20);
+        addCookie(response, token, user);
 
         return true;
     }
@@ -80,14 +81,19 @@ public class SeckillUserServiceImpl extends ServiceImpl<SeckillUserMapper, Secki
 
         SeckillUser user = redisService.get(SeckillUserKey.TOKEN, token, SeckillUser.class);
         // 延长cookie时间
-        addCookie(response, user);
+        addCookie(response, token, user);
 
         return user;
     }
 
 
-    private void addCookie(HttpServletResponse response, SeckillUser user) {
-        String token = RandomUtil.getRandomString(20);
+    /**
+     * 添加 token 或 延长token时间
+     * @param response
+     * @param token
+     * @param user
+     */
+    private void addCookie(HttpServletResponse response, String token, SeckillUser user) {
         user.setPassword(null);
         redisService.set(SeckillUserKey.TOKEN, token, user);
 

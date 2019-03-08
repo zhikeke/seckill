@@ -16,9 +16,9 @@ import org.apache.ibatis.annotations.Param;
 public interface SeckillUserMapper extends BaseMapper<SeckillUser> {
 
     /**
-     * 根据用户名查询用户
-     * @param nickname 用户名
+     * 根据手机号查询用户
+     * @param mobile 手机号
      * @return
      */
-    SeckillUser selectByNickName(@Param("nickname") String nickname);
+    SeckillUser selectByMobile(@Param("mobile") String mobile);
 }
