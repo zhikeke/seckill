@@ -41,7 +41,7 @@ public class ResourcesGenerator {
         gc.setBaseResultMap(true);
         // XML columList
         gc.setBaseColumnList(true);
-        gc.setAuthor("ma");
+        gc.setAuthor("keke");
         mpg.setGlobalConfig(gc);
 
         // 数据源配置

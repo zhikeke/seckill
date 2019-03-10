@@ -2,6 +2,7 @@ package com.ke.seckill.exception;
 
 import com.ke.seckill.response.ResponseMessage;
 import com.ke.seckill.response.Response;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -14,12 +15,15 @@ import java.util.List;
 /**
  * 全局异常处理器
  */
+@Slf4j
 @ControllerAdvice
 @ResponseBody
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = Exception.class)
     public Response exceptionHandler(HttpServletRequest request, Exception e) {
+        log.error("请求异常:{}", e);
+
         if (e instanceof GlobalException) {
             GlobalException exception = (GlobalException) e;
             return Response.error(exception.getResponseMessage());
