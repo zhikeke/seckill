@@ -21,5 +21,12 @@
     <sql id="Base_Column_List">
         id, user_id, good_id, delivery_addr_id, good_name, good_count, good_price, order_channel, status, create_date, pay_date
     </sql>
+    
+    <insert id="createOrder" parameterType="com.ke.seckill.entity.Orders" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO
+          orders(user_id, good_id, delivery_addr_id, good_name, good_count, good_price, order_channel, status, create_date, pay_date)
+        VALUES
+          (#{userId}, #{goodId}, #{deliveryAddrId}, #{goodName}, #{goodCount}, #{goodPrice}, #{orderChannel}, #{status}, #{createDate}, #{payDate})
+    </insert>
 
 </mapper>

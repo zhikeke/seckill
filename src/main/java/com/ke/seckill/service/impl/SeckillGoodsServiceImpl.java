@@ -2,11 +2,13 @@ package com.ke.seckill.service.impl;
 
 import com.ke.seckill.dto.SeckillGoodDTO;
 import com.ke.seckill.entity.SeckillGoods;
+import com.ke.seckill.entity.SeckillOrders;
 import com.ke.seckill.mapper.SeckillGoodsMapper;
 import com.ke.seckill.service.ISeckillGoodsService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -33,4 +35,13 @@ public class SeckillGoodsServiceImpl extends ServiceImpl<SeckillGoodsMapper, Sec
     public SeckillGoodDTO getDetailById(long goodId) {
         return seckillGoodsMapper.getDetailById(goodId);
     }
+
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void reduceStock(SeckillGoodDTO good) {
+        seckillGoodsMapper.reduceStock(good.getGoodId(), good.getStock() - 1);
+    }
+
+
 }

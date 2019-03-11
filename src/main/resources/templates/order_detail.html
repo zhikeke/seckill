@@ -24,15 +24,15 @@
   <table class="table" id="goodslist">
         <tr>  
         <td>商品名称</td>  
-        <td th:text="${goods.goodsName}" colspan="3"></td> 
+        <td th:text="${good.goodName}" colspan="3"></td>
      </tr>  
      <tr>  
         <td>商品图片</td>  
-        <td colspan="2"><img th:src="@{${goods.goodsImg}}" width="200" height="200" /></td>  
+        <td colspan="2"><img th:src="@{${good.img}}" width="200" height="200" /></td>
      </tr>
       <tr>  
         <td>订单价格</td>  
-        <td colspan="2" th:text="${orderInfo.goodsPrice}"></td>  
+        <td colspan="2" th:text="${orderInfo.goodPrice}"></td>
      </tr>
      <tr>
      		<td>下单时间</td>  
@@ -47,18 +47,15 @@
         	<span th:if="${orderInfo.status eq 3}">已收货</span>
         	<span th:if="${orderInfo.status eq 4}">已退款</span>
         	<span th:if="${orderInfo.status eq 5}">已完成</span>
-        </td>  
-        <td>
-        	<button class="btn btn-primary btn-block" type="submit" id="payButton">立即支付</button>
         </td>
      </tr>
       <tr>
      		<td>收货人</td>  
-        	<td colspan="2">XXX  18812341234</td>  
+        	<td colspan="2">XXX  15688888888</td>
      </tr>
      <tr>
      		<td>收货地址</td>  
-        	<td colspan="2">北京市昌平区回龙观龙博一区</td>  
+        	<td colspan="2">广州市XXXXX</td>
      </tr>
   </table>
 </div>

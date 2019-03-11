@@ -44,6 +44,16 @@
         FROM
           seckill_goods sg
         LEFT JOIN goods g  ON sg.good_id = g.id AND g.deleted = 0
-        WHERE sg.good_id = 1
+        WHERE sg.good_id = #{goodId}
     </select>
+    
+    <update id="reduceStock" >
+        UPDATE
+          seckill_goods
+        SET
+          stock = #{stock}
+        WHERE
+          good_id = #{goodId}
+    </update>
+    
 </mapper>

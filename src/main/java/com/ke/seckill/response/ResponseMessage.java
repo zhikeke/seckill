@@ -34,9 +34,10 @@ public class ResponseMessage {
     public static ResponseMessage ORDER_NOT_EXIST = new ResponseMessage(500400, "订单不存在");
 
     //秒杀模块 5005XX
-    public static ResponseMessage MIAO_SHA_OVER = new ResponseMessage(500500, "商品已经秒杀完毕");
-    public static ResponseMessage REPEATE_MIAOSHA = new ResponseMessage(500501, "不能重复秒杀");
-    public static ResponseMessage MIAOSHA_FAIL = new ResponseMessage(500502, "秒杀失败");
+    public static ResponseMessage SECKILL_OVER = new ResponseMessage(500500, "商品已经秒杀完毕");
+    public static ResponseMessage REPEATE_SECKILL = new ResponseMessage(500501, "不能重复秒杀");
+    public static ResponseMessage SECKILL_FAIL = new ResponseMessage(500502, "秒杀失败");
+    public static ResponseMessage SECKILL_NOT_START = new ResponseMessage(500503, "秒杀活动还没开始");
 
 
 

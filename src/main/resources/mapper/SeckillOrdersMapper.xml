@@ -15,4 +15,21 @@
         id, user_id, order_id, goods_id
     </sql>
 
+    <select id="selectOrderByUserIdAndGoodId" resultMap="BaseResultMap">
+        SELECT
+          *
+        FROM
+          seckill_orders
+        WHERE
+          user_id = #{userId} AND goods_id = #{goodId}
+    </select>
+    
+    
+    <insert id="createSeckillOrder" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO
+          seckill_orders(user_id, order_id, goods_id)
+        VALUE
+          (#{userId}, #{orderId}, #{goodsId})
+    </insert>
+
 </mapper>

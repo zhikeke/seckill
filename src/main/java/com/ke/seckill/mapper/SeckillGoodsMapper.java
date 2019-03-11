@@ -28,4 +28,11 @@ public interface SeckillGoodsMapper extends BaseMapper<SeckillGoods> {
      * @return
      */
     SeckillGoodDTO getDetailById(@Param("goodId") long goodId);
+
+    /**
+     *更新秒杀商品库存
+     * @param goodId 商品ID
+     * @param stock 库存
+     */
+    void reduceStock(@Param("goodId") Long goodId, @Param("stock") Integer stock);
 }

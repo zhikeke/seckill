@@ -3,6 +3,7 @@ package com.ke.seckill.service;
 import com.ke.seckill.dto.SeckillGoodDTO;
 import com.ke.seckill.entity.SeckillGoods;
 import com.baomidou.mybatisplus.service.IService;
+import com.ke.seckill.entity.SeckillOrders;
 
 import java.util.List;
 
@@ -28,4 +29,11 @@ public interface ISeckillGoodsService extends IService<SeckillGoods> {
      * @return
      */
     SeckillGoodDTO getDetailById(long goodId);
+
+    /**
+     * 减少库存
+     * @param good
+     */
+    void reduceStock(SeckillGoodDTO good);
+
 }

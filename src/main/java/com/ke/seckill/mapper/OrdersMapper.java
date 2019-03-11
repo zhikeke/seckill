@@ -13,4 +13,9 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  */
 public interface OrdersMapper extends BaseMapper<Orders> {
 
+    /**
+     * 创建订单
+     * @param orders
+     */
+    long createOrder(Orders orders);
 }
