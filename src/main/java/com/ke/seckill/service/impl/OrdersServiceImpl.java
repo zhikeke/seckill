@@ -47,9 +47,7 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders> impleme
         orders.setCreateDate(new Date());
         orders.setPayDate(new Date());
 
-        long id = ordersMapper.createOrder(orders);
-
-        orders.setId(id);
+        ordersMapper.createOrder(orders);
 
         return orders;
     }

@@ -51,7 +51,7 @@
         UPDATE
           seckill_goods
         SET
-          stock = #{stock}
+          stock = stock - 1
         WHERE
           good_id = #{goodId}
     </update>

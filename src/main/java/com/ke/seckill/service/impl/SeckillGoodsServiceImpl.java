@@ -40,7 +40,7 @@ public class SeckillGoodsServiceImpl extends ServiceImpl<SeckillGoodsMapper, Sec
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void reduceStock(SeckillGoodDTO good) {
-        seckillGoodsMapper.reduceStock(good.getGoodId(), good.getStock() - 1);
+        seckillGoodsMapper.reduceStock(good.getGoodId());
     }
 
 

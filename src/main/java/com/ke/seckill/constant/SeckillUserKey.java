@@ -1,6 +1,8 @@
-package com.ke.seckill.redis;
+package com.ke.seckill.constant;
 
-public class SeckillUserKey extends BasePrefix{
+import com.ke.seckill.redis.BasePrefix;
+
+public class SeckillUserKey extends BasePrefix {
 
 	public static final int TOKEN_EXPIRE = 3600 * 24 * 2;
 

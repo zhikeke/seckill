@@ -5,7 +5,7 @@ import com.ke.seckill.entity.SeckillUser;
 import com.ke.seckill.exception.GlobalException;
 import com.ke.seckill.mapper.SeckillUserMapper;
 import com.ke.seckill.redis.RedisService;
-import com.ke.seckill.redis.SeckillUserKey;
+import com.ke.seckill.constant.SeckillUserKey;
 import com.ke.seckill.response.ResponseMessage;
 import com.ke.seckill.service.ISeckillUserService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
