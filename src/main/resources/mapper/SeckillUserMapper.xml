@@ -32,5 +32,12 @@
           deleted = 0
     </select>
 
+    
+    <insert id="createUser" parameterType="com.ke.seckill.entity.SeckillUser">
+        INSERT INTO
+          seckill_user(mobile, password, salt, head, register_date, last_login_date, login_count, deleted)
+        VALUES
+          (#{mobile}, #{password}, #{salt}, #{head}, #{registerDate}, #{lastLoginDate}, #{loginCount}, #{deleted})
+    </insert>
 
 </mapper>

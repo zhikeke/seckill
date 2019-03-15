@@ -21,7 +21,7 @@ public interface ISeckillUserService extends IService<SeckillUser> {
      * @param loginVo {@link LoginVo}
      * @return
      */
-    boolean login(HttpServletResponse response, LoginVo loginVo);
+    String login(HttpServletResponse response, LoginVo loginVo);
 
     /**
      *  根据token 获取用户
@@ -29,4 +29,10 @@ public interface ISeckillUserService extends IService<SeckillUser> {
      * @return
      */
     SeckillUser getByToken(HttpServletResponse response, String token);
+
+    /**
+     * 创建用户
+     * @param user
+     */
+    void createUser(SeckillUser user);
 }

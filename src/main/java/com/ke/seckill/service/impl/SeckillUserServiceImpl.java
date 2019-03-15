@@ -42,7 +42,7 @@ public class SeckillUserServiceImpl extends ServiceImpl<SeckillUserMapper, Secki
      * @return
      */
     @Override
-    public boolean login(HttpServletResponse response, LoginVo loginVo) {
+    public String login(HttpServletResponse response, LoginVo loginVo) {
         if (null == loginVo) {
             throw new GlobalException(ResponseMessage.SERVER_ERROR);
         }
@@ -65,7 +65,7 @@ public class SeckillUserServiceImpl extends ServiceImpl<SeckillUserMapper, Secki
         String token = RandomUtil.getRandomString(20);
         addCookie(response, token, user);
 
-        return true;
+        return token;
     }
 
     /**
@@ -84,6 +84,11 @@ public class SeckillUserServiceImpl extends ServiceImpl<SeckillUserMapper, Secki
         addCookie(response, token, user);
 
         return user;
+    }
+
+    @Override
+    public void createUser(SeckillUser user) {
+        userMapper.createUser(user);
     }
 
 

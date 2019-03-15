@@ -29,7 +29,7 @@ public class GoodsController {
     @Autowired
     private ISeckillGoodsService seckillGoodsService;
 
-    /**
+    /**--
      * 返回商品列表页面
      * @return
      */
@@ -37,14 +37,11 @@ public class GoodsController {
     public String goodslist(Model model, SeckillUser seckillUser) {
         if (null != seckillUser) {
             model.addAttribute("user", seckillUser);
-
-            List<SeckillGoodDTO> seckillGoods = seckillGoodsService.getAll();
-            model.addAttribute("seckillGoods", seckillGoods);
-
-            return "goods_list";
         }
+        List<SeckillGoodDTO> seckillGoods = seckillGoodsService.getAll();
+        model.addAttribute("seckillGoods", seckillGoods);
 
-        return "redirect:/login/to_login";
+        return "goods_list";
     }
 
     /**

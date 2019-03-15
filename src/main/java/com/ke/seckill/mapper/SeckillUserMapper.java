@@ -21,4 +21,10 @@ public interface SeckillUserMapper extends BaseMapper<SeckillUser> {
      * @return
      */
     SeckillUser selectByMobile(@Param("mobile") String mobile);
+
+    /**
+     * 创建用户
+     * @param user
+     */
+    void createUser(SeckillUser user);
 }
