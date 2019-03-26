@@ -4,17 +4,31 @@ import com.ke.seckill.redis.BasePrefix;
 
 public class GoodKey extends BasePrefix {
 
-    public static final int TOKEN_EXPIRE = 5;
+    private static final int TOKEN_EXPIRE_FOR_HTML = 5;
+
+    private static final int TOKEN_EXPIRE = 4;
 
     private GoodKey(int expireSeconds, String prefix) {
         super(expireSeconds, prefix);
     }
 
     /**
-     * 获取商品列表key
+     * 获取商品列表
      */
     public static GoodKey GET_GOODS_LIST = new GoodKey(TOKEN_EXPIRE, "good_list");
 
-    public static GoodKey GET_GOOD_DETAIL = new GoodKey(TOKEN_EXPIRE, "good_detail");
+    /**
+     * 获取商品列表页面缓存
+     */
+    public static GoodKey GET_GOODS_LIST_HTML = new GoodKey(TOKEN_EXPIRE_FOR_HTML, "good_list_html");
 
+    /**
+     * 商品详情页面缓存
+     */
+    public static GoodKey GET_GOOD_DETAIL_HTML = new GoodKey(TOKEN_EXPIRE_FOR_HTML, "good_detail_html");
+
+    /**
+     * 获取某个商品详细信息
+     */
+    public static GoodKey GET_GOOD_DETAIL = new GoodKey(TOKEN_EXPIRE, "good_detail");
 }

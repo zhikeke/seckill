@@ -36,17 +36,17 @@
 <div class="panel panel-default" style="height:100%;background-color:rgba(222,222,222,0.8)" >
   <div class="panel-heading">秒杀商品详情</div>
   <div class="panel-body">
-  	<span id="userTip"> 您还没有登录，请登陆后再操作<br/></span>
-  	<span>没有收货地址的提示。。。</span>
+  	<!--<span id="userTip"> 您还没有登录，请登陆后再操作<br/></span>-->
+  	<!--<span>没有收货地址的提示。。。</span>-->
   </div>
   <table class="table" id="goodslist">
   	<tr>  
         <td>商品名称</td>  
-        <td colspan="3" id="goodsName"></td> 
+        <td colspan="3" id="goodName"></td>
      </tr>  
      <tr>  
         <td>商品图片</td>  
-        <td colspan="3"><img  id="goodsImg" width="200" height="200" /></td>  
+        <td colspan="3"><img id="goodImg" width="200" height="200" /></td>
      </tr>
      <tr>  
         <td>秒杀开始时间</td>  
@@ -63,21 +63,21 @@
         	</form>-->
         	<div class="row">
         		<div class="form-inline">
-		        	<img id="verifyCodeImg" width="80" height="32"  style="display:none" onclick="refreshVerifyCode()"/>
-		        	<input id="verifyCode"  class="form-control" style="display:none"/>
-		        	<button class="btn btn-primary" type="button" id="buyButton"onclick="getMiaoshaPath()">立即秒杀</button>
+		        	<!--<img id="verifyCodeImg" width="80" height="32"  style="display:none" onclick="refreshVerifyCode()"/>-->
+		        	<!--<input id="verifyCode"  class="form-control" style="display:none"/>-->
+		        	<button class="btn btn-primary" type="button" id="buyButton" onclick="doSeckill()">立即秒杀</button>
         		</div>
         	</div>
-        	<input type="hidden" name="goodsId"  id="goodsId" />
+        	<input type="hidden" name="goodId"  id="goodId" />
         </td>
      </tr>
      <tr>  
         <td>商品原价</td>  
-        <td colspan="3" id="goodsPrice"></td>  
+        <td colspan="3" id="price"></td>
      </tr>
       <tr>  
         <td>秒杀价</td>  
-        <td colspan="3"  id="miaoshaPrice"></td>  
+        <td colspan="3"  id="seckillPrice"></td>
      </tr>
      <tr>  
         <td>库存数量</td>  
@@ -88,159 +88,102 @@
 </body>
 <script>
 
-function getMiaoshaPath(){
-	var goodsId = $("#goodsId").val();
-	g_showLoading();
-	$.ajax({
-		url:"/miaosha/path",
-		type:"GET",
-		data:{
-			goodsId:goodsId,
-			verifyCode:$("#verifyCode").val()
-		},
-		success:function(data){
-			if(data.code == 0){
-				var path = data.data;
-				doMiaosha(path);
-			}else{
-				layer.msg(data.msg);
-			}
-		},
-		error:function(){
-			layer.msg("客户端请求有误");
-		}
-	});
-}
+    $(function(){
+        getDetail();
+    });
 
-function getMiaoshaResult(goodsId){
-	g_showLoading();
-	$.ajax({
-		url:"/miaosha/result",
-		type:"GET",
-		data:{
-			goodsId:$("#goodsId").val(),
-		},
-		success:function(data){
-			if(data.code == 0){
-				var result = data.data;
-				if(result < 0){
-					layer.msg("对不起，秒杀失败");
-				}else if(result == 0){//继续轮询
-					setTimeout(function(){
-						getMiaoshaResult(goodsId);
-					}, 200);
-				}else{
-					layer.confirm("恭喜你，秒杀成功！查看订单？", {btn:["确定","取消"]},
-							function(){
-								window.location.href="/order_detail.htm?orderId="+result;
-							},
-							function(){
-								layer.closeAll();
-							});
-				}
-			}else{
-				layer.msg(data.msg);
-			}
-		},
-		error:function(){
-			layer.msg("客户端请求有误");
-		}
-	});
-}
+    function getDetail(){
+        var goodId = g_getQueryString("goodId");
+        $.ajax({
+            url:"/goods/detail/" + goodId,
+            type:"GET",
+            success:function(data){
+                if(data.code == 0){
+                    render(data.data);
+                }else{
+                    layer.msg(data.msg);
+                }
+            },
+            error:function(){
+                layer.msg("客户端请求有误");
+            }
+        });
+    }
 
-function doMiaosha(path){
-	$.ajax({
-		url:"/miaosha/"+path+"/do_miaosha",
-		type:"POST",
-		data:{
-			goodsId:$("#goodsId").val()
-		},
-		success:function(data){
-			if(data.code == 0){
-				//window.location.href="/order_detail.htm?orderId="+data.data.id;
-				getMiaoshaResult($("#goodsId").val());
-			}else{
-				layer.msg(data.msg);
-			}
-		},
-		error:function(){
-			layer.msg("客户端请求有误");
-		}
-	});
-	
-}
+    function countDown(){
+        var remainSeconds = $("#remainSeconds").val();
+        var timeout;
+        if(remainSeconds > 0){//秒杀还没开始，倒计时
+           $("#buyButton").attr("disabled", true);
+           $("#miaoshaTip").html("秒杀倒计时："+remainSeconds+"秒");
+            timeout = setTimeout(function(){
+                $("#countDown").text(remainSeconds - 1);
+                $("#remainSeconds").val(remainSeconds - 1);
+                countDown();
+            },1000);
+        }else if(remainSeconds == 0){//秒杀进行中
+            $("#buyButton").attr("disabled", false);
+            if(timeout){
+                clearTimeout(timeout);
+            }
+            $("#miaoshaTip").html("秒杀进行中");
+            $("#verifyCodeImg").attr("src", "/miaosha/verifyCode?goodsId="+$("#goodsId").val());
+            $("#verifyCodeImg").show();
+            $("#verifyCode").show();
+        }else{//秒杀已经结束
+            $("#buyButton").attr("disabled", true);
+            $("#miaoshaTip").html("秒杀已经结束");
+            $("#verifyCodeImg").hide();
+            $("#verifyCode").hide();
+        }
+    }
 
-function render(detail){
-	var miaoshaStatus = detail.miaoshaStatus;
-	var  remainSeconds = detail.remainSeconds;
-	var goods = detail.goods;
-	var user = detail.user;
-	if(user){
-		$("#userTip").hide();
-	}
-	$("#goodsName").text(goods.goodsName);
-	$("#goodsImg").attr("src", goods.goodsImg);
-	$("#startTime").text(new Date(goods.startDate).format("yyyy-MM-dd hh:mm:ss"));
-	$("#remainSeconds").val(remainSeconds);
-	$("#goodsId").val(goods.id);
-	$("#goodsPrice").text(goods.goodsPrice);
-	$("#miaoshaPrice").text(goods.miaoshaPrice);
-	$("#stockCount").text(goods.stockCount);
-	countDown();
-}
+    function refreshVerifyCode(){
+        $("#verifyCodeImg").attr("src", "/miaosha/verifyCode?goodsId=" + $("#goodsId").val() + "&timestamp=" + new Date().getTime());
+    }
 
-$(function(){
-	//countDown();
-	getDetail();
-});
+    function doSeckill(){
+        var goodId = g_getQueryString("goodId");
 
-function getDetail(){
-	var goodsId = g_getQueryString("goodsId");
-	$.ajax({
-		url:"/goods/detail/"+goodsId,
-		type:"GET",
-		success:function(data){
-			if(data.code == 0){
-				render(data.data);
-			}else{
-				layer.msg(data.msg);
-			}
-		},
-		error:function(){
-			layer.msg("客户端请求有误");
-		}
-	});
-}
+        $.ajax({
+            url:"/seckill/do_seckill",
+            type:"POST",
+            data:{
+                goodId: goodId
+            },
+            success:function(data){
+                if(data.code == 0){
+                    window.location.href="/order_detail.htm?orderId=" + data.data.id;
+                }else{
+                    layer.msg(data.msg);
+                }
+            },
+            error:function(){
+                layer.msg("客户端请求有误");
+            }
+        });
 
-function countDown(){
-	var remainSeconds = $("#remainSeconds").val();
-	var timeout;
-	if(remainSeconds > 0){//秒杀还没开始，倒计时
-	   $("#buyButton").attr("disabled", true);
-	   $("#miaoshaTip").html("秒杀倒计时："+remainSeconds+"秒");
-		timeout = setTimeout(function(){
-			$("#countDown").text(remainSeconds - 1);
-			$("#remainSeconds").val(remainSeconds - 1);
-			countDown();
-		},1000);
-	}else if(remainSeconds == 0){//秒杀进行中
-		$("#buyButton").attr("disabled", false);
-		if(timeout){
-			clearTimeout(timeout);
-		}
-		$("#miaoshaTip").html("秒杀进行中");
-		$("#verifyCodeImg").attr("src", "/miaosha/verifyCode?goodsId="+$("#goodsId").val());
-		$("#verifyCodeImg").show();
-		$("#verifyCode").show();
-	}else{//秒杀已经结束
-		$("#buyButton").attr("disabled", true);
-		$("#miaoshaTip").html("秒杀已经结束");
-		$("#verifyCodeImg").hide();
-		$("#verifyCode").hide();
-	}
-}
-function refreshVerifyCode(){
-	$("#verifyCodeImg").attr("src", "/miaosha/verifyCode?goodsId="+$("#goodsId").val()+"&timestamp="+new Date().getTime());
-}
+    }
+
+    function render(detail){
+        var seckillStatus = detail.seckillStatus;
+        var remainSeconds = detail.remainSeconds;
+        var seckillGood = detail.seckillGood;
+        var user = detail.user;
+
+        if(user){
+            $("#userTip").hide();
+        }
+        $("#goodName").text(seckillGood.goodName);
+        $("#goodImg").attr("src", seckillGood.img);
+        $("#startTime").text(new Date(seckillGood.startDate).format("yyyy-MM-dd hh:mm:ss"));
+        $("#remainSeconds").val(remainSeconds);
+        $("#goodId").val(seckillGood.id);
+        $("#price").text(seckillGood.price);
+        $("#seckillPrice").text(seckillGood.seckillPrice);
+        $("#stockCount").text(seckillGood.stock);
+        countDown();
+   }
+
 </script>
 </html>

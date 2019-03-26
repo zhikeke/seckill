@@ -29,14 +29,18 @@ public class SeckillServiceImpl implements ISeckillService {
     @Transactional(rollbackFor = Exception.class)
     public Orders seckill(SeckillUser user, SeckillGoodDTO good) {
         // 减少库存
-        seckillGoodsService.reduceStock(good);
+        int count = seckillGoodsService.reduceStock(good);
 
-        // 添加订单记录
-        Orders order = ordersService.createOrder(user, good);
+        if (count > 0) {
+            // 添加订单记录
+            Orders order = ordersService.createOrder(user, good);
 
-        // 添加秒杀记录
-        SeckillOrders seckillOrder = seckillOrdersService.createSeckillOrder(user.getId(), order.getId(), good.getGoodId());
+            // 添加秒杀记录
+            SeckillOrders seckillOrder = seckillOrdersService.createSeckillOrder(user.getId(), order.getId(), good.getGoodId());
 
-         return order;
+            return order;
+        }
+
+        return null;
     }
 }

@@ -34,6 +34,6 @@ public interface ISeckillGoodsService extends IService<SeckillGoods> {
      * 减少库存
      * @param good
      */
-    void reduceStock(SeckillGoodDTO good);
+    int reduceStock(SeckillGoodDTO good);
 
 }

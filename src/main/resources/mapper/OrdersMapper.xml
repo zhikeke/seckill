@@ -33,4 +33,13 @@
           (#{userId}, #{goodId}, #{deliveryAddrId}, #{goodName}, #{goodCount}, #{goodPrice}, #{orderChannel}, #{status}, #{createDate}, #{payDate})
     </insert>
 
+    <select id="getDetail" parameterType="Long" resultType="com.ke.seckill.vo.OrderDetailVO">
+        SELECT
+           o.id AS orderId, o.good_name AS goodName, o.good_price AS orderPrice, o.create_date AS createDate,
+           o.status AS orderStatus, g.img  AS goodImg
+        FROM
+           orders o
+        LEFT JOIN goods g ON o.good_id = g.id WHERE o.id = #{orderId}
+    </select>
+
 </mapper>

@@ -4,7 +4,9 @@ import com.ke.seckill.constant.GoodKey;
 import com.ke.seckill.dto.SeckillGoodDTO;
 import com.ke.seckill.entity.SeckillUser;
 import com.ke.seckill.redis.RedisService;
+import com.ke.seckill.response.Response;
 import com.ke.seckill.service.ISeckillGoodsService;
+import com.ke.seckill.vo.GoodDetailVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -41,7 +43,7 @@ public class GoodsController {
     @ResponseBody
     public String goodslist(HttpServletRequest request, HttpServletResponse response, Model model, SeckillUser seckillUser) {
         // 先从缓存中查找数据
-        String html = redisService.get(GoodKey.GET_GOODS_LIST, "", String.class);
+        String html = redisService.get(GoodKey.GET_GOODS_LIST_HTML, "", String.class);
 
         // 如果存在页面缓存，直接返回
         if (StringUtils.isNoneEmpty(html)) {
@@ -60,7 +62,7 @@ public class GoodsController {
         html = thymeleafViewResolver.getTemplateEngine().process("goods_list", ctx);
 
         if (StringUtils.isNotEmpty(html)) {
-            redisService.set(GoodKey.GET_GOODS_LIST, "", html);
+            redisService.set(GoodKey.GET_GOOD_DETAIL_HTML, "", html);
         }
 
         return html;
@@ -77,7 +79,7 @@ public class GoodsController {
     @ResponseBody
     public String goodDetail(HttpServletRequest request, HttpServletResponse response,
                              Model model, SeckillUser seckillUser, @PathVariable("goodId") long goodId) {
-        String html = redisService.get(GoodKey.GET_GOOD_DETAIL, String.valueOf(goodId), String.class);
+        String html = redisService.get(GoodKey.GET_GOOD_DETAIL_HTML, String.valueOf(goodId), String.class);
 
         if (StringUtils.isNotEmpty(html)) {
             return html;
@@ -113,9 +115,45 @@ public class GoodsController {
         html = thymeleafViewResolver.getTemplateEngine().process("goods_detail", ctx);
 
         if (StringUtils.isNotEmpty(html)) {
-            redisService.set(GoodKey.GET_GOOD_DETAIL, String.valueOf(goodId), html);
+            redisService.set(GoodKey.GET_GOOD_DETAIL_HTML, String.valueOf(goodId), html);
         }
 
         return html;
+    }
+
+    /**
+     * 返回商品详情 ajax 请求
+     * @param model
+     * @param seckillUser
+     * @param goodId 商品id
+     * @return
+     */
+    @RequestMapping(value = "/detail/{goodId}")
+    @ResponseBody
+    public Response<GoodDetailVO> detail(HttpServletRequest request, HttpServletResponse response,
+                           Model model, SeckillUser seckillUser, @PathVariable("goodId") long goodId) {
+
+        GoodDetailVO vo = new GoodDetailVO();
+
+        SeckillGoodDTO good = seckillGoodsService.getDetailById(goodId);
+
+        vo.setSeckillGood(good);
+
+        if (null != good) {
+            long currentTimeMillions = System.currentTimeMillis();
+            long seckillStartTime = good.getStartDate().getTime();
+            long seckillEndTime = good.getEndDate().getTime();
+
+            if (currentTimeMillions < seckillStartTime) {
+                vo.setRemainSeconds(seckillStartTime - seckillEndTime);
+                vo.setSeckillStatus(0);
+            } else if (currentTimeMillions > seckillEndTime) {
+                vo.setSeckillStatus(2);
+            } else {
+                vo.setSeckillStatus(1);
+            }
+        }
+
+        return Response.success(vo);
     }
 }

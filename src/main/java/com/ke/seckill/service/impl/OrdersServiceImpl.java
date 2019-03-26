@@ -6,6 +6,7 @@ import com.ke.seckill.entity.SeckillUser;
 import com.ke.seckill.mapper.OrdersMapper;
 import com.ke.seckill.service.IOrdersService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.ke.seckill.vo.OrderDetailVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,5 +51,10 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders> impleme
         ordersMapper.createOrder(orders);
 
         return orders;
+    }
+
+    @Override
+    public OrderDetailVO getDetail(Long orderId) {
+        return ordersMapper.getDetail(orderId);
     }
 }

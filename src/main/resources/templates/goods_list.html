@@ -43,8 +43,10 @@
                 <td th:text="${seckillGood.price}"></td>
                 <td th:text="${seckillGood.seckillPrice}"></td>
                 <td th:text="${seckillGood.stock}"></td>
-                <td><a th:href="'/goods/to_detail/'+${seckillGood.goodId}">详情</a></td>
-     </tr>  
+                <!--<td><a th:href="'/goods/to_detail/'+${seckillGood.goodId}">详情</a></td>-->
+
+                <td><a th:href="'/goods_detail.htm?goodId=' + ${seckillGood.goodId}">详情</a></td>
+     </tr>
   </table>
 </div>
 </body>

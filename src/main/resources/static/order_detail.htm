@@ -34,14 +34,14 @@
 <body>
 <div class="panel panel-default"  style="height:100%;background-color:rgba(222,222,222,0.8)">
   <div class="panel-heading">秒杀订单详情</div>
-  <table class="table" id="goodslist">
+  <table class="table" id="orderDetail">
         <tr>  
         <td>商品名称</td>  
-        <td colspan="3" id="goodsName"></td> 
+        <td colspan="3" id="goodName"></td>
      </tr>  
      <tr>  
         <td>商品图片</td>  
-        <td colspan="2"><img  id="goodsImg" width="200" height="200" /></td>  
+        <td colspan="2"><img  id="goodImg" width="200" height="200" /></td>
      </tr>
       <tr>  
         <td>订单价格</td>  
@@ -53,7 +53,7 @@
      </tr>
      <tr>
      	<td>订单状态</td>  
-        <td id="orderStatus">
+            <td id="orderStatus">
         </td>  
         <td>
         	<button class="btn btn-primary btn-block" type="submit" id="payButton">立即支付</button>
@@ -61,28 +61,28 @@
      </tr>
       <tr>
      		<td>收货人</td>  
-        	<td colspan="2">XXX  18812341234</td>  
+        	<td colspan="2">XXX  15688888888</td>
      </tr>
      <tr>
      		<td>收货地址</td>  
-        	<td colspan="2">北京市昌平区回龙观龙博一区</td>  
+        	<td colspan="2">广州市 XXX XXXX</td>
      </tr>
   </table>
 </div>
 </body>
 </html>
 <script>
-function render(detail){
-	var goods = detail.goods;
-	var order = detail.order;
-	$("#goodsName").text(goods.goodsName);
-	$("#goodsImg").attr("src", goods.goodsImg);
-	$("#orderPrice").text(order.goodsPrice);
-	$("#createDate").text(new Date(order.createDate).format("yyyy-MM-dd hh:mm:ss"));
+function render(orderDetail){
+	$("#goodName").text(orderDetail.goodName);
+	$("#goodImg").attr("src", orderDetail.goodImg);
+	$("#orderPrice").text(orderDetail.orderPrice);
+	$("#createDate").text(new Date(orderDetail.createDate).format("yyyy-MM-dd hh:mm:ss"));
+
 	var status = "";
-	if(order.status == 0){
+	if(orderDetail.orderStatus == 0){
 		status = "未支付"
-	}else if(order.status == 1){
+	}else if(orderDetail.orderStatus == 1){
+        $("#payButton").hide();
 		status = "待发货";
 	}
 	$("#orderStatus").text(status);

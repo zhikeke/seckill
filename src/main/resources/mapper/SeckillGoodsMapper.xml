@@ -47,13 +47,13 @@
         WHERE sg.good_id = #{goodId}
     </select>
     
-    <update id="reduceStock" >
+    <update id="reduceStock">
         UPDATE
           seckill_goods
         SET
           stock = stock - 1
         WHERE
-          good_id = #{goodId}
+          good_id = #{goodId} AND stock > 0
     </update>
     
 </mapper>

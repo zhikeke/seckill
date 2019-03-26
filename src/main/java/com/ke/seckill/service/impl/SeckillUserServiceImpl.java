@@ -80,8 +80,10 @@ public class SeckillUserServiceImpl extends ServiceImpl<SeckillUserMapper, Secki
         }
 
         SeckillUser user = redisService.get(SeckillUserKey.TOKEN, token, SeckillUser.class);
-        // 延长cookie时间
-        addCookie(response, token, user);
+        if (null != user) {
+            // 延长cookie时间
+            addCookie(response, token, user);
+        }
 
         return user;
     }
@@ -105,6 +107,6 @@ public class SeckillUserServiceImpl extends ServiceImpl<SeckillUserMapper, Secki
         Cookie cookie = new Cookie(ConstantKey.COOKIE_NAME_TOKEN, token);
         cookie.setMaxAge(SeckillUserKey.TOKEN_EXPIRE);
         cookie.setPath("/");
-        response.addCookie(cookie);
+//        response.addCookie(cookie);
     }
 }

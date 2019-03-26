@@ -4,6 +4,7 @@ import com.ke.seckill.dto.SeckillGoodDTO;
 import com.ke.seckill.entity.Orders;
 import com.baomidou.mybatisplus.service.IService;
 import com.ke.seckill.entity.SeckillUser;
+import com.ke.seckill.vo.OrderDetailVO;
 
 /**
  * <p>
@@ -21,4 +22,11 @@ public interface IOrdersService extends IService<Orders> {
      * @param good
      */
     Orders createOrder(SeckillUser user, SeckillGoodDTO good);
+
+    /**
+     * 获取订单详情
+     * @param orderId 订单ID
+     * @return
+     */
+    OrderDetailVO getDetail(Long orderId);
 }
