@@ -56,19 +56,14 @@ public class SeckillGoodsServiceImpl extends ServiceImpl<SeckillGoodsMapper, Sec
         return seckillGoodDTOS;
     }
 
+    /**
+     * 只从数据库读取
+     * @param goodId
+     * @return
+     */
     @Override
     public SeckillGoodDTO getDetailById(long goodId) {
-        SeckillGoodDTO seckillGoodDTO = redisService.get(GoodKey.GET_GOOD_DETAIL, String.valueOf(goodId), SeckillGoodDTO.class);
-
-        if (null != seckillGoodDTO) {
-            return seckillGoodDTO;
-        }
-
-        seckillGoodDTO =  seckillGoodsMapper.getDetailById(goodId);
-
-        redisService.set(GoodKey.GET_GOOD_DETAIL, String.valueOf(goodId),seckillGoodDTO);
-
-        return seckillGoodDTO;
+        return seckillGoodsMapper.getDetailById(goodId);
     }
 
 
@@ -76,6 +71,19 @@ public class SeckillGoodsServiceImpl extends ServiceImpl<SeckillGoodsMapper, Sec
     @Transactional(rollbackFor = Exception.class)
     public int reduceStock(SeckillGoodDTO good) {
         return seckillGoodsMapper.reduceStock(good.getGoodId());
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int reduceStock(long goodId) {
+        return seckillGoodsMapper.reduceStock(goodId);
+    }
+
+    @Override
+    public boolean getStockById(long goodId) {
+        int stock = seckillGoodsMapper.getStockById(goodId);
+
+        return stock > 0;
     }
 
 

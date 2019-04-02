@@ -43,4 +43,19 @@ public class SeckillServiceImpl implements ISeckillService {
 
         return null;
     }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void seckill(long userId, long goodId) {
+        // 减少库存
+        int count = seckillGoodsService.reduceStock(goodId);
+
+        if (count > 0) {
+            // 添加订单记录
+            Orders order = ordersService.createOrder(userId, goodId);
+
+            // 添加秒杀记录
+           seckillOrdersService.createSeckillOrder(userId, order.getId(), goodId);
+        }
+    }
 }

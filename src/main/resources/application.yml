@@ -14,6 +14,15 @@ spring:
      username: root
      password: 123456
      url: jdbc:mysql://localhost:3306/seckill?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&serverTimezone=GMT%2B8
+  rabbitmq:
+    host: 192.168.120.100
+    port: 5672
+    username: guest
+    password: guest
+    virtual-host: /
+    listener:
+      simple:
+        acknowledge-mode: manual
 
 
 #mybaits-plus
@@ -23,6 +32,5 @@ mybatis-plus:
 
 
 jedis:
-  host: localhost
+  host: 192.168.120.100
   port: 6379
-

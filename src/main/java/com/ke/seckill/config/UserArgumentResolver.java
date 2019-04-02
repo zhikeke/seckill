@@ -39,14 +39,6 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
                                   NativeWebRequest nativeWebRequest,
                                   WebDataBinderFactory webDataBinderFactory) throws Exception {
 
-        HttpServletRequest request = nativeWebRequest.getNativeRequest(HttpServletRequest.class);
-        HttpServletResponse response = nativeWebRequest.getNativeResponse(HttpServletResponse.class);
-
-        String paramToken = request.getParameter(ConstantKey.COOKIE_NAME_TOKEN);
-        String cookieToken = CookieUtil.getCookieValue(request, ConstantKey.COOKIE_NAME_TOKEN);
-
-        String token = StringUtils.isBlank(paramToken) ? cookieToken : paramToken;
-
-        return userService.getByToken(response, token);
+        return UserLocal.getCurrentUser();
     }
 }

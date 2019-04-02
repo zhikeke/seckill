@@ -6,6 +6,8 @@ import com.ke.seckill.entity.SeckillUser;
 import com.ke.seckill.mapper.OrdersMapper;
 import com.ke.seckill.service.IOrdersService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.ke.seckill.service.ISeckillGoodsService;
+import com.ke.seckill.service.ISeckillService;
 import com.ke.seckill.vo.OrderDetailVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +28,8 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders> impleme
 
     @Autowired
     private OrdersMapper ordersMapper;
+    @Autowired
+    private ISeckillGoodsService seckillGoodsService;
 
     /**
      * 生成订单
@@ -56,5 +60,27 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders> impleme
     @Override
     public OrderDetailVO getDetail(Long orderId) {
         return ordersMapper.getDetail(orderId);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Orders createOrder(long userId, long goodId) {
+        SeckillGoodDTO seckillGoodDTO = seckillGoodsService.getDetailById(goodId);
+
+        Orders orders = new Orders();
+        orders.setUserId(userId);
+        orders.setGoodId(goodId);
+        orders.setGoodCount(1);
+        orders.setGoodName(seckillGoodDTO.getGoodName());
+        orders.setGoodPrice(seckillGoodDTO.getSeckillPrice());
+        orders.setDeliveryAddrId(888L);
+        orders.setOrderChannel(1);
+        orders.setStatus(1);
+        orders.setCreateDate(new Date());
+        orders.setPayDate(new Date());
+
+        ordersMapper.createOrder(orders);
+
+        return orders;
     }
 }

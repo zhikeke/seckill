@@ -25,6 +25,7 @@ public class ResponseMessage {
     public static ResponseMessage NICKNAME_EMPTY = new ResponseMessage(500212, "用户名不能为空");
     public static ResponseMessage NICKNAME_NOT_EXIST = new ResponseMessage(500214, "用户名不存在");
     public static ResponseMessage PASSWORD_ERROR = new ResponseMessage(500215, "密码错误");
+    public static ResponseMessage VERIFY_CODE_ERROR = new ResponseMessage(500216, "验证码错误");
 
 
     //商品模块 5003XX
@@ -37,7 +38,7 @@ public class ResponseMessage {
     public static ResponseMessage SECKILL_OVER = new ResponseMessage(500500, "商品已经秒杀完毕");
     public static ResponseMessage REPEATE_SECKILL = new ResponseMessage(500501, "不能重复秒杀");
     public static ResponseMessage SECKILL_FAIL = new ResponseMessage(500502, "秒杀失败");
-    public static ResponseMessage SECKILL_NOT_START = new ResponseMessage(500503, "秒杀活动还没开始");
+    public static ResponseMessage SECKILL_NOT_IN_TIME = new ResponseMessage(500503, "当前时间不在秒杀时间范围内");
 
 
 

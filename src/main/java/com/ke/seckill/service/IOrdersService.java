@@ -29,4 +29,12 @@ public interface IOrdersService extends IService<Orders> {
      * @return
      */
     OrderDetailVO getDetail(Long orderId);
+
+    /**
+     * 添加订单
+     * @param userId
+     * @param goodId
+     * @return
+     */
+    Orders createOrder(long userId, long goodId);
 }

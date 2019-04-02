@@ -63,9 +63,9 @@
         	</form>-->
         	<div class="row">
         		<div class="form-inline">
-		        	<!--<img id="verifyCodeImg" width="80" height="32"  style="display:none" onclick="refreshVerifyCode()"/>-->
-		        	<!--<input id="verifyCode"  class="form-control" style="display:none"/>-->
-		        	<button class="btn btn-primary" type="button" id="buyButton" onclick="doSeckill()">立即秒杀</button>
+		        	<img id="verifyCodeImg" width="80" height="32"  style="display:none" onclick="refreshVerifyCode()"/>
+		        	<input id="verifyCode"  class="form-control" style="display:none"/>
+		        	<button class="btn btn-primary" type="button" id="buyButton" onclick="getSeckillPath()">立即秒杀</button>
         		</div>
         	</div>
         	<input type="hidden" name="goodId"  id="goodId" />
@@ -89,10 +89,6 @@
 <script>
 
     $(function(){
-        getDetail();
-    });
-
-    function getDetail(){
         var goodId = g_getQueryString("goodId");
         $.ajax({
             url:"/goods/detail/" + goodId,
@@ -108,7 +104,8 @@
                 layer.msg("客户端请求有误");
             }
         });
-    }
+    });
+
 
     function countDown(){
         var remainSeconds = $("#remainSeconds").val();
@@ -127,7 +124,7 @@
                 clearTimeout(timeout);
             }
             $("#miaoshaTip").html("秒杀进行中");
-            $("#verifyCodeImg").attr("src", "/miaosha/verifyCode?goodsId="+$("#goodsId").val());
+            $("#verifyCodeImg").attr("src", "/seckill/verifyCode?goodId="+$("#goodId").val());
             $("#verifyCodeImg").show();
             $("#verifyCode").show();
         }else{//秒杀已经结束
@@ -139,21 +136,47 @@
     }
 
     function refreshVerifyCode(){
-        $("#verifyCodeImg").attr("src", "/miaosha/verifyCode?goodsId=" + $("#goodsId").val() + "&timestamp=" + new Date().getTime());
+        $("#verifyCodeImg").attr("src", "/seckill/verifyCode?goodId=" + $("#goodId").val() + "&timestamp=" + new Date().getTime());
     }
 
-    function doSeckill(){
+    // 获取秒杀路径
+    function getSeckillPath() {
         var goodId = g_getQueryString("goodId");
-
+        $("#goodId").val(goodId);
         $.ajax({
-            url:"/seckill/do_seckill",
+            url: "/seckill/getSeckillPath",
             type:"POST",
             data:{
                 goodId: goodId
             },
+            success: function (data) {
+               if (data.code == 0) {
+                   doSeckill(data.data);
+               } else {
+                   layer.msg(data.msg);
+               }
+            },
+            error: function (e) {
+                layer.msg("请求出错");
+            }
+        })
+    }
+
+    // 发起秒杀
+    function doSeckill(path){
+        var goodId = g_getQueryString("goodId");
+        $.ajax({
+            url:"/seckill/" + path + "/do_seckill",
+            type:"POST",
+            data:{
+                goodId: goodId,
+                verifyCode: $("#verifyCode").val()
+            },
             success:function(data){
+                console.log(data)
                 if(data.code == 0){
-                    window.location.href="/order_detail.htm?orderId=" + data.data.id;
+                    // window.location.href="/order_detail.htm?orderId=" + data.data.id;
+                    getSeckillResult($("#goodId").val());
                 }else{
                     layer.msg(data.msg);
                 }
@@ -184,6 +207,42 @@
         $("#stockCount").text(seckillGood.stock);
         countDown();
    }
+
+    function getSeckillResult(goodId){
+        g_showLoading();
+        $.ajax({
+            url:"/seckill/result",
+            type:"GET",
+            data:{
+                goodId:$("#goodId").val(),
+            },
+            success:function(data){
+                if(data.code == 0){
+                    var result = data.data;
+                    if(result < 0){
+                        layer.msg("对不起，秒杀失败");
+                    }else if(result == 0){//继续轮询
+                        setTimeout(function(){
+                            getSeckillResult(goodId);
+                        }, 500);
+                    }else{
+                        layer.confirm("恭喜你，秒杀成功！查看订单？", {btn:["确定","取消"]},
+                            function(){
+                                window.location.href="/order_detail.htm?orderId=" + result;
+                            },
+                            function(){
+                                layer.closeAll();
+                            });
+                    }
+                }else{
+                    layer.msg(data.msg);
+                }
+            },
+            error:function(){
+                layer.msg("客户端请求有误");
+            }
+        });
+    }
 
 </script>
 </html>

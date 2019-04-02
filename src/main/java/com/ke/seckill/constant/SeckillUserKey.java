@@ -13,4 +13,14 @@ public class SeckillUserKey extends BasePrefix {
 	public static SeckillUserKey TOKEN = new SeckillUserKey(TOKEN_EXPIRE, "user_tk");
 
 	public static SeckillUserKey getById = new SeckillUserKey(0, "id");
+
+	/**
+	 * 保存用户秒杀路径
+	 */
+	public static SeckillUserKey SECKILL_PATH = new SeckillUserKey(0, "seckil_path:");
+
+	/**
+	 * 保存用户秒杀二维码结果
+	 */
+	public static SeckillUserKey SECKILL_VERIFY_CODE_RESULT = new SeckillUserKey(300, "seckil_verify_code_result:");
 }

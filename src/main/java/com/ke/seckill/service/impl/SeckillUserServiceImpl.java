@@ -1,5 +1,6 @@
 package com.ke.seckill.service.impl;
 
+import com.ke.seckill.config.UserLocal;
 import com.ke.seckill.constant.ConstantKey;
 import com.ke.seckill.entity.SeckillUser;
 import com.ke.seckill.exception.GlobalException;
@@ -12,6 +13,7 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ke.seckill.util.MD5Util;
 import com.ke.seckill.util.RandomUtil;
 import com.ke.seckill.vo.LoginVo;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +29,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author keke
  * @since 2019-03-07
  */
+@Slf4j
 @Service
 public class SeckillUserServiceImpl extends ServiceImpl<SeckillUserMapper, SeckillUser> implements ISeckillUserService {
 
@@ -58,8 +61,6 @@ public class SeckillUserServiceImpl extends ServiceImpl<SeckillUserMapper, Secki
         if (!password.equals(user.getPassword())) {
             throw new GlobalException(ResponseMessage.PASSWORD_ERROR);
         }
-
-        // TODO: kafka 保存用户登录信息
 
         // 生成cookie
         String token = RandomUtil.getRandomString(20);
@@ -101,12 +102,17 @@ public class SeckillUserServiceImpl extends ServiceImpl<SeckillUserMapper, Secki
      * @param user
      */
     private void addCookie(HttpServletResponse response, String token, SeckillUser user) {
-        user.setPassword(null);
-        redisService.set(SeckillUserKey.TOKEN, token, user);
+        if (null != response) {
+            user.setPassword(null);
+            redisService.set(SeckillUserKey.TOKEN, token, user);
 
-        Cookie cookie = new Cookie(ConstantKey.COOKIE_NAME_TOKEN, token);
-        cookie.setMaxAge(SeckillUserKey.TOKEN_EXPIRE);
-        cookie.setPath("/");
-//        response.addCookie(cookie);
+            UserLocal.setUser(user);
+
+            Cookie cookie = new Cookie(ConstantKey.COOKIE_NAME_TOKEN, token);
+            cookie.setMaxAge(SeckillUserKey.TOKEN_EXPIRE);
+            cookie.setPath("/");
+
+            response.addCookie(cookie);
+        }
     }
 }

@@ -36,4 +36,17 @@ public interface ISeckillGoodsService extends IService<SeckillGoods> {
      */
     int reduceStock(SeckillGoodDTO good);
 
+    /**
+     * 减少库存
+     * @param goodId 商品id
+     * @return
+     */
+    int reduceStock(long goodId);
+
+    /**
+     * 删除数据库中是否还有商品库存
+     * @param goodId 商品库存
+     * @return
+     */
+    boolean getStockById(long goodId);
 }

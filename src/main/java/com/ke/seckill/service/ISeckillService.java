@@ -13,4 +13,12 @@ public interface ISeckillService {
      * @return
      */
     Orders seckill(SeckillUser user, SeckillGoodDTO good);
+
+
+    /**
+     * 秒杀
+     * @param userId 用户id
+     * @param goodId 商品id
+     */
+    void seckill(long userId, long goodId);
 }

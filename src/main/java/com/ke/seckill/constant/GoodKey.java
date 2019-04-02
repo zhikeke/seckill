@@ -31,4 +31,19 @@ public class GoodKey extends BasePrefix {
      * 获取某个商品详细信息
      */
     public static GoodKey GET_GOOD_DETAIL = new GoodKey(TOKEN_EXPIRE, "good_detail");
+
+    /**
+     * 秒杀商品库存信息
+     */
+    public static GoodKey SECKILL_GOODS_STOCK = new GoodKey(0, "seckill_good_stock:");
+
+    /**
+     * 秒杀商品开始时间
+     */
+    public static GoodKey SECKILL_GOODS_START_TIME = new GoodKey(0, "seckill_good_start_time:");
+
+    /**
+     * 秒杀商品结束时间
+     */
+    public static GoodKey SECKILL_GOODS_END_TIME = new GoodKey(0, "seckill_good_end_time:");
 }

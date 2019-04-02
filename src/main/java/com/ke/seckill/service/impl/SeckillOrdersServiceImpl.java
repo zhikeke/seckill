@@ -28,8 +28,6 @@ public class SeckillOrdersServiceImpl extends ServiceImpl<SeckillOrdersMapper, S
 
     @Override
     public SeckillOrders selectOrderByUserIdAndGoodId(Long userId, long goodId) {
-//        return seckillOrdersMapper.selectOrderByUserIdAndGoodId(userId, goodId);
-
         return redisService.get(SeckillOrderKey.getSeckillOrderByUidAndGid, "_" + userId + "_" + goodId, SeckillOrders.class);
     }
 

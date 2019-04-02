@@ -24,7 +24,7 @@ public class FileController {
         for (int i = 0; i < 10; i++) {
             final int a = i;
             new Thread(() -> {
-                createUser("15622973" + a);
+                createUser("1562297" + a);
             }).start();
         }
 
@@ -33,19 +33,31 @@ public class FileController {
 
     @RequestMapping("/login")
     @ResponseBody
-    public String login(HttpServletResponse response) {
-        for (int i = 0; i < 10; i++) {
-            final int a = i;
-            new Thread(() -> {
-                login(response, "15622973" + a);
-            }).start();
+    public String login(HttpServletResponse response) throws Exception{
+        File file = new File("D:\\token.txt");
+        FileOutputStream outputStream = null;
+
+        try {
+            // 追加写入
+            outputStream = new FileOutputStream(file, true);
+
+            for (int i = 0; i < 10; i++) {
+                login(response, "1562297" + i, outputStream);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (null != outputStream) {
+                outputStream.close();
+            }
         }
+
 
         return "success";
     }
 
     private void createUser(String pref) {
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 400; i++) {
             SeckillUser user = new SeckillUser();
             StringBuilder mobile = new StringBuilder(pref);
 
@@ -69,44 +81,27 @@ public class FileController {
     }
 
 
-    private void login(HttpServletResponse response, String pref) {
-        File file = new File("D:\\token.txt");
-        FileOutputStream outputStream = null;
+    private void login(HttpServletResponse response, String pref, FileOutputStream outputStream) throws Exception{
+        for (int i = 0; i < 400; i++) {
+            StringBuilder mobile = new StringBuilder(pref);
 
-        try {
-             outputStream = new FileOutputStream(file);
-
-            for (int i = 0; i < 100; i++) {
-                StringBuilder mobile = new StringBuilder(pref);
-
-                if (i < 10) {
-                    mobile.append("00").append(i);
-                } else {
-                    mobile.append("0").append(i);
-                }
-
-                LoginVo loginVo = new LoginVo();
-                loginVo.setMobile(mobile.toString());
-                loginVo.setPassword(MD5Util.inputPassToFormPass("123456"));
-
-                String token = userService.login(response, loginVo);
-
-                outputStream.write(token.getBytes());
-                outputStream.write("\r\n".getBytes());// 写入一个换行
+            if (i < 10) {
+                mobile.append("00").append(i);
+            } else {
+                mobile.append("0").append(i);
             }
 
-            outputStream.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (outputStream != null) {
-                try {
-                    outputStream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+            LoginVo loginVo = new LoginVo();
+            loginVo.setMobile(mobile.toString());
+            loginVo.setPassword(MD5Util.inputPassToFormPass("123456"));
+
+            String token = userService.login(response, loginVo);
+
+            outputStream.write(token.getBytes());
+            outputStream.write("\r\n".getBytes());// 写入一个换行
         }
+
+           outputStream.flush();
     }
 
 }

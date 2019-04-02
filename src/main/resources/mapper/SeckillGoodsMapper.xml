@@ -55,5 +55,9 @@
         WHERE
           good_id = #{goodId} AND stock > 0
     </update>
-    
+
+    <select id="getStockById" parameterType="Long" resultType="int">
+        SELECT stock FROM seckill_goods WHERE good_id = #{goodId}
+    </select>
+
 </mapper>
